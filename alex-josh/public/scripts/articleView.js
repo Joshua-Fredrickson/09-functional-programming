@@ -141,4 +141,6 @@ var app = app || {};
     $('#blog-stats .words').text(app.Article.numWordsAll());
     return template(this);
   };
+  module.articleView = articleView;
+
 })(app)
