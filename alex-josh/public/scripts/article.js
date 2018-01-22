@@ -24,11 +24,11 @@ var app = app || {};
 
   Article.loadAll = rawData => {
     rawData.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)))
-    rawData.forEach(articleObject => Article.all.push(new Article(articleObject)));
+    // rawData.forEach(articleObject => Article.all.push(new Article(articleObject)));
     /* OLD forEach():
     rawData.forEach(articleObject => Article.all.push(new Article(articleObject)));
     */
-    // Article.all = rawData.map(articleObject => new Article(articleObject))
+    Article.all = rawData.map(articleObject => new Article(articleObject))
   };
 
   Article.fetchAll = callback => {
@@ -40,15 +40,26 @@ var app = app || {};
   };
 
   Article.numWordsAll = () => {
-    return Article.all.map().reduce()
+    return Article.all.map(article => article.body.split (' ').length).reduce((acc, cur) => acc + cur);
   };
 
   Article.allAuthors = () => {
-    return Article.all.map().reduce();
+    return Article.all.map(article => article.author).reduce((acc, cur) => {
+      if (acc.indexOf(cur) === -1) {
+        acc.push(cur);
+      }
+      return acc;
+    }, []);
   };
 
   Article.numWordsByAuthor = () => {
-    return Article.allAuthors().map(author => {})
+    return Article.allAuthors().map(author => {
+      return {
+        name: author,
+        numWords: Article.all.filter(article => article.author === author).map(article => article.body.split(' ')
+          .length).reduce((acc,cum) => acc + cum)
+      }
+    })
   };
 
   Article.truncateTable = callback => {
